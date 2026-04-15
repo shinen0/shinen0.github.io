@@ -1,33 +1,170 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mappa Palazzo Moncada - Piano Inferiore</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="scripts.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planimetria Interattiva</title>
+    <style>
+        .mappa-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #004688; /* Blu scuro */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-family: sans-serif;
+        }
+
+        svg {
+            margin-top: 15px;
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #004688; /* Forza lo sfondo blu anche dentro l'SVG */
+        }
+
+        .stanza { cursor: pointer; outline: none; }
+
+        .cls-2 {
+            fill: aquamarine;
+            stroke: #2c3e50;
+            stroke-width: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .stanza:hover .cls-2 { fill: #ffff00 !important; }
+
+        .stanza-attiva .cls-2 {
+            fill: #ff7d12 !important;
+            stroke: #ffffff;
+        }
+
+        .label-stanza {
+            font-size: 11px;
+            fill: #2c3e50;
+            pointer-events: none;
+            text-anchor: middle;
+            alignment-baseline: middle;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #info-pannello {
+            margin-top: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        #player-wrapper {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .avviso {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+    </style>
 </head>
 <body>
-    <?xml version="1.0" encoding="UTF-8"?>
-<h1>Versione 0.1 - DEMO - per revisione</h1>    
-<!-- nome stanza al click -->
-<div id="info-stanza" class="stile-testo-mappa">
-    Seleziona una stanza per ascoltare la descrizione
-</div>
-        <div class="mappa-container">
-            <svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1366 768">
+<h1 class="avviso">Versione 0.1.3 - DEMO - per revisione</h1> 
+<div class="mappa-wrapper" id="main-container">
+    <svg viewBox="443 250 480 450" preserveAspectRatio="xMidYMid meet">
+        <g class="stanza" id="stanza_mattonelle_sx">
+            <polygon class="cls-2" points="668.15 251.69 453 251.69 453 385.74 548.89 385.74 548.89 288.54 668.15 288.54 668.15 251.69"/>
+            <text x="502" y="305" class="label-stanza">stanza</text>
+            <text x="502" y="320" class="label-stanza">mattonelle</text>
+        </g>
+        <g class="stanza" id="lapidarium">
+            <polygon class="cls-2" points="668.15 389.77 668.15 586.43 453 586.43 453 389.21 668.15 389.77"/>
+            <text x="560" y="490" class="label-stanza">lapidarium</text>
+        </g>
+        <g class="stanza" id="ghigliottina">
+            <polygon class="cls-2" points="602.14 293.08 553.49 293.08 553.49 385.74 668.15 385.74 668.15 293.08 615.01 293.08 602.14 293.08"/>
+            <text x="610" y="340" class="label-stanza">ghigliottina</text>
+        </g>
+        <g class="stanza" id="corridoio_centrale">
+            <polygon class="cls-2" points="691.92 587.47 672.35 587.47 672.35 432.96 672.35 411.61 672.35 277.6 672.35 261.57 672.35 251.69 726.74 251.69 761.61 251.69 768.06 251.69 768.06 290.03 768.06 317.07 768.06 411.61 768.06 431.97 768.06 531.47 768.06 557.54 768.06 587.47 751.74 587.47 691.92 587.47"/>
+            <text x="720" y="420" class="label-stanza">Corridoio</text>
+        </g>
+        <g class="stanza" id="bookshop">
+            <polygon class="cls-2" points="831.61 494.24 772.27 494.24 772.27 531.47 772.27 557.54 772.27 587.47 913 587.47 913 494.24 860.94 494.24 831.61 494.24"/>
+            <text x="842" y="540" class="label-stanza">Bookshop</text>
+        </g>
+        <g class="stanza" id="stanza_2_dx">
+            <polygon class="cls-2" points="831.61 369.71 772.27 369.71 772.27 317.07 772.27 290.03 772.27 251.69 913 251.69 913 369.71 860.94 369.71 831.61 369.71"/>
+            <text x="842" y="310" class="label-stanza">stanza 2</text>
+        </g>
+        <g class="stanza" id="stanza_1_dx">
+            <polygon class="cls-2" points="831.61 490.98 772.27 490.98 772.27 431.97 772.27 411.61 772.27 372.96 831.61 372.96 860.94 372.96 913 372.96 913 490.98 860.94 490.98 831.61 490.98"/>
+            <text x="842" y="430" class="label-stanza">stanza 1</text>           
+        </g>
+        <g class="stanza" id="ingresso">
+            <polygon class="cls-2" points="691.92 592.08 672.35 592.08 672.35 665.4 768.06 665.4 768.06 592.08 751.74 592.08 691.92 592.08"/>
+            <text x="720" y="630" class="label-stanza">ingresso</text>
+        </g>
+    </svg>
 
-            <path id="bookshop" class="cls-1" d="M770.68,442.85v16.89h-5.89l.06,36.47h5.83v38.22h66.27c.82,12.9,1.63,25.79,2.45,38.69h50.29c.86-12.9,1.71-25.79,2.57-38.69h18.08v-91.59c-46.55,0-93.1,0-139.65,0Z"/>
-            <rect id="sala_1_corridoio" class="cls-1" x="674.9" y="232.05" width="89.95" height="302.39"/>
-            <polygon id="sala_2_mensoloni" class="cls-1" points="673.5 403.81 640.02 403.81 640.02 534.44 604.78 534.44 601.98 577.79 552.28 577.79 549.48 534.44 507.95 534.44 505.15 577.79 455.45 577.79 452.65 534.44 412.4 534.44 412.4 342.17 640.02 342.17 640.02 365.12 673.5 365.12 673.5 403.81"/>
-            <polygon id="sala_2_contigua" class="cls-1" points="412.4 337.85 423.36 337.85 423.36 340.01 450.43 340.01 450.43 337.85 520.21 337.85 520.21 227.39 501.3 227.39 495.58 190.21 453.35 190.21 447.75 227.39 412.4 227.39 412.4 337.85"/>
-            <polygon id="corridoio_ghigliottina" class="cls-1" points="522.07 232.05 522.07 260.71 525.1 260.71 525.1 265.14 640.02 265.14 640.02 262.35 673.5 262.35 673.5 234.61 639.96 234.61 640.02 227.39 525.1 227.39 525.1 232.05 522.07 232.05"/>
-            <polygon id="ghigliottina" class="cls-1" points="567.92 266.43 595.37 266.43 595.37 269.45 639.96 269.45 639.96 337.85 525.1 337.85 525.1 269.45 567.92 269.45 567.92 266.43"/>
-            <polygon id="sala_3_dx" class="cls-1" points="766.25 366.52 766.25 393.32 770.68 393.32 770.68 437.02 825.17 437.02 825.17 439.7 853.51 439.93 853.51 437.02 910.33 437.02 910.33 409.76 954.2 405.63 954.2 356.97 910.33 354.64 910.33 329.11 855.27 329.11 855.27 326.79 826.21 326.79 826.21 329.27 770.68 329.27 770.68 366.52 766.25 366.52"/>
-            <polygon id="sala_4_dx" class="cls-1" points="826.21 323.29 826.21 325.74 855.27 325.74 855.27 323.29 910.33 323.29 910.33 296.95 954.6 292.88 954.6 244.17 910.63 242.09 910.63 233.21 770.68 233.21 770.68 262.93 766.25 262.93 766.25 291.59 770.68 291.59 770.68 323.29 826.21 323.29"/>
-            </svg>
-        </div>
-<h1>Cliccare su una stanza per ascoltare la descrizione</h1>
-<h2>N.B. Per ora solo la stanza dei gattoni è attiva!</h2>
+    <div id="info-pannello">
+        <h2 id="titolo-stanza">Seleziona una stanza</h2>
+        <p id="info-stanza">Clicca sulla mappa per ascoltare la descrizione.</p>
+        <div id="player-wrapper"></div>
+    </div>
+</div>
+
+<script>
+    const descrizioni = {
+        "stanza_mattonelle_sx": "Le antiche mattonelle del piano terra.",
+        "lapidarium": "Collezione di reperti epigrafici e lapidei.",
+        "ghigliottina": "Area dedicata alla giustizia storica.",
+        "corridoio_centrale": "Il passaggio principale del museo.",
+        "bookshop": "Qui puoi acquistare souvenir e libri.",
+        "ingresso": "Benvenuti al museo.",
+        "stanza_2_dx": "Esposizione temporanea lato destro."
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById('main-container');
+        const titoloUI = document.getElementById('titolo-stanza');
+        const infoUI = document.getElementById('info-stanza');
+        const wrapper = document.getElementById('player-wrapper');
+
+        container.addEventListener('click', (e) => {
+            const stanzaGroup = e.target.closest('.stanza');
+            if (!stanzaGroup) return;
+
+            const id = stanzaGroup.id;
+            const nomeDisplay = id.replace(/_/g, ' ');
+
+            // Visual update
+            document.querySelectorAll('.stanza').forEach(s => s.classList.remove('stanza-attiva'));
+            stanzaGroup.classList.add('stanza-attiva');
+
+            titoloUI.innerText = nomeDisplay;
+            infoUI.innerText = descrizioni[id] || "Descrizione non disponibile.";
+
+            // Audio Player update
+            wrapper.innerHTML = `
+                <div class="player-container">
+                    <p style="font-size: 0.8em; margin-bottom: 5px;">▶ Riproduzione audio...</p>
+                    <audio controls autoplay style="width: 100%;">
+                        <source src="audio/${id}.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+            `;
+
+            const audioEvt = wrapper.querySelector('audio');
+            audioEvt.onended = () => {
+                stanzaGroup.classList.remove('stanza-attiva');
+            };
+        });
+    });
+</script>
+
 </body>
 </html>
