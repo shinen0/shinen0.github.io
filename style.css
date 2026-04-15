@@ -1,1 +1,63 @@
+        .mappa-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #004688; /* Blu scuro */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-family: sans-serif;
+        }
 
+        svg {
+            margin-top: 15px;
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #004688; /* Forza lo sfondo blu anche dentro l'SVG */
+        }
+
+        .stanza { cursor: pointer; outline: none; }
+
+        .cls-2 {
+            fill: aquamarine;
+            stroke: #2c3e50;
+            stroke-width: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .stanza:hover .cls-2 { fill: #ffff00 !important; }
+
+        .stanza-attiva .cls-2 {
+            fill: #ff7d12 !important;
+            stroke: #ffffff;
+        }
+
+        .label-stanza {
+            font-size: 11px;
+            fill: #2c3e50;
+            pointer-events: none;
+            text-anchor: middle;
+            alignment-baseline: middle;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #info-pannello {
+            margin-top: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        #player-wrapper {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .avviso {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
