@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planimetria Interattiva</title>
+    <style>
+        .mappa-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #004688; /* Blu scuro */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            font-family: sans-serif;
+        }
+
+        svg {
+            margin-top: 15px;
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #004688; /* Forza lo sfondo blu anche dentro l'SVG */
+        }
+
+        .stanza { cursor: pointer; outline: none; }
+
+        .cls-2 {
+            fill: aquamarine;
+            stroke: #2c3e50;
+            stroke-width: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .stanza:hover .cls-2 { fill: #ffff00 !important; }
+
+        .stanza-attiva .cls-2 {
+            fill: #ff7d12 !important;
+            stroke: #ffffff;
+        }
+
+        .label-stanza {
+            font-size: 11px;
+            fill: #2c3e50;
+            pointer-events: none;
+            text-anchor: middle;
+            alignment-baseline: middle;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #info-pannello {
+            margin-top: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        #player-wrapper {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .avviso {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+    </style>
+</head>
+<body>
+<h1 class="avviso">Versione 0.1.3 - DEMO - per revisione</h1> 
+<div class="mappa-wrapper" id="main-container">
+    <svg viewBox="443 250 480 450" preserveAspectRatio="xMidYMid meet">
+        <g class="stanza" id="stanza_mattonelle_sx">
+            <polygon class="cls-2" points="668.15 251.69 453 251.69 453 385.74 548.89 385.74 548.89 288.54 668.15 288.54 668.15 251.69"/>
+            <text x="502" y="305" class="label-stanza">stanza</text>
+            <text x="502" y="320" class="label-stanza">mattonelle</text>
+        </g>
+        <g class="stanza" id="lapidarium">
+            <polygon class="cls-2" points="668.15 389.77 668.15 586.43 453 586.43 453 389.21 668.15 389.77"/>
+            <text x="560" y="490" class="label-stanza">lapidarium</text>
+        </g>
+        <g class="stanza" id="ghigliottina">
+            <polygon class="cls-2" points="602.14 293.08 553.49 293.08 553.49 385.74 668.15 385.74 668.15 293.08 615.01 293.08 602.14 293.08"/>
+            <text x="610" y="340" class="label-stanza">ghigliottina</text>
+        </g>
+        <g class="stanza" id="corridoio_centrale">
+            <polygon class="cls-2" points="691.92 587.47 672.35 587.47 672.35 432.96 672.35 411.61 672.35 277.6 672.35 261.57 672.35 251.69 726.74 251.69 761.61 251.69 768.06 251.69 768.06 290.03 768.06 317.07 768.06 411.61 768.06 431.97 768.06 531.47 768.06 557.54 768.06 587.47 751.74 587.47 691.92 587.47"/>
+            <text x="720" y="420" class="label-stanza">Corridoio</text>
+        </g>
+        <g class="stanza" id="bookshop">
+            <polygon class="cls-2" points="831.61 494.24 772.27 494.24 772.27 531.47 772.27 557.54 772.27 587.47 913 587.47 913 494.24 860.94 494.24 831.61 494.24"/>
+            <text x="842" y="540" class="label-stanza">Bookshop</text>
+        </g>
+        <g class="stanza" id="stanza_2_dx">
+            <polygon class="cls-2" points="831.61 369.71 772.27 369.71 772.27 317.07 772.27 290.03 772.27 251.69 913 251.69 913 369.71 860.94 369.71 831.61 369.71"/>
+            <text x="842" y="310" class="label-stanza">stanza 2</text>
+        </g>
+        <g class="stanza" id="stanza_1_dx">
+            <polygon class="cls-2" points="831.61 490.98 772.27 490.98 772.27 431.97 772.27 411.61 772.27 372.96 831.61 372.96 860.94 372.96 913 372.96 913 490.98 860.94 490.98 831.61 490.98"/>
+            <text x="842" y="430" class="label-stanza">stanza 1</text>           
+        </g>
+        <g class="stanza" id="ingresso">
+            <polygon class="cls-2" points="691.92 592.08 672.35 592.08 672.35 665.4 768.06 665.4 768.06 592.08 751.74 592.08 691.92 592.08"/>
+            <text x="720" y="630" class="label-stanza">ingresso</text>
+        </g>
+    </svg>
+
+    <div id="info-pannello">
+        <h2 id="titolo-stanza">Seleziona una stanza</h2>
+        <p id="info-stanza">Clicca sulla mappa per ascoltare la descrizione.</p>
+        <div id="player-wrapper"></div>
+    </div>
+</div>
+
+<script>
+    const descrizioni = {
+        "stanza_mattonelle_sx": "Le antiche mattonelle del piano terra.",
+        "lapidarium": "Collezione di reperti epigrafici e lapidei.",
+        "ghigliottina": "Area dedicata alla giustizia storica.",
+        "corridoio_centrale": "Il passaggio principale del museo.",
+        "bookshop": "Qui puoi acquistare souvenir e libri.",
+        "ingresso": "Benvenuti al museo.",
+        "stanza_2_dx": "Esposizione temporanea lato destro."
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById('main-container');
+        const titoloUI = document.getElementById('titolo-stanza');
+        const infoUI = document.getElementById('info-stanza');
+        const wrapper = document.getElementById('player-wrapper');
+
+        container.addEventListener('click', (e) => {
+            const stanzaGroup = e.target.closest('.stanza');
+            if (!stanzaGroup) return;
+
+            const id = stanzaGroup.id;
+            const nomeDisplay = id.replace(/_/g, ' ');
+
+            // Visual update
+            document.querySelectorAll('.stanza').forEach(s => s.classList.remove('stanza-attiva'));
+            stanzaGroup.classList.add('stanza-attiva');
+
+            titoloUI.innerText = nomeDisplay;
+            infoUI.innerText = descrizioni[id] || "Descrizione non disponibile.";
+
+            // Audio Player update
+            wrapper.innerHTML = `
+                <div class="player-container">
+                    <p style="font-size: 0.8em; margin-bottom: 5px;">▶ Riproduzione audio...</p>
+                    <audio controls autoplay style="width: 100%;">
+                        <source src="audio/${id}.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
+            `;
+
+            const audioEvt = wrapper.querySelector('audio');
+            audioEvt.onended = () => {
+                stanzaGroup.classList.remove('stanza-attiva');
+            };
+        });
+    });
+</script>
+
+</body>
+</html>
