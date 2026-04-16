@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planimetria Interattiva</title>
+    <style>
+        /* Contenitore principale */
+        .window {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #004688;
+            border-radius: 12px;
+            box-shadow: 0 1px 20px #003666;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Zona Mappa con scroll */
+        .mappa-container {
+            height: 950px; 
+            overflow: auto;
+            background-color: #003666;
+            padding: 20px;
+            display: flex; /* Flexbox per centrare l'SVG */
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        svg {
+            width: 100%; 
+            height: auto;
+            display: block;
+            max-width: 850px;
+        }
+
+        .stanza { 
+            cursor: pointer; 
+            outline: none;
+        }
+
+        .cls-2 {
+            fill: #a8d0e6;
+            stroke: #004688;
+            stroke-width: 0.5px;
+            transition: fill 0.3s ease, filter 0.3s ease;
+        }
+        .stanza:hover .cls-2 {
+            fill: #D3E7F2 !important;
+            filter: brightness(1.1);
+        }
+
+        .stanza-attiva .label-stanza {
+            fill: #ffffff !important;
+        }
+
+        .stanza-attiva .cls-2 {
+            fill: #f76c6c !important;
+            stroke: #f8e9a1;
+            stroke-width: 1px;
+            filter: drop-shadow(0px 0px 4px rgb(248,233,161));
+        }
+
+        .label-stanza {
+            font-size: 11px;
+            fill: #2c3e50;
+            pointer-events: none;
+            text-anchor: middle;
+            alignment-baseline: middle;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Pannello Info */
+        #info-pannello {
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+            background-color: #004688;
+            min-height: 180px;
+            box-shadow: 0 1px 20px #003666;
+        }
+
+        #player-wrapper {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .avviso {
+            background-color: black;
+            color: white;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .lang-switcher {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.lang-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid white;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.lang-btn.active {
+    background: white;
+    color: #004688;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+
+<h1 class="avviso">Versione 0.2.0 - DEMO - ALPHA</h1> 
+
+<div class="window">
+    <div class="mappa-container" id="mainContainer">
+        <svg viewBox="0 -300 530 900" preserveAspectRatio="xMidYMid meet">
+            
+            <!-- GUADAGNOLO 2 -->
+            <g class="stanza" id="guadagnolo_2">
+                <polygon class="cls-2" points="324,-204 524,-204 524,-300 324,-300"/>
+                <text x="424" y="-250" class="label-stanza">Guadagnolo</text>
+            </g>
+            <!-- GUADAGNOLO 1 -->
+            <g class="stanza" id="guadagnolo_1">
+                <polygon class="cls-2" points="324,-104 524,-104 524,-200 324,-200"/>
+                <text x="424" y="-150" class="label-stanza">Guadagnolo</text>
+            </g>
+            <!-- UP STANZA DX 4 -->
+            <g class="stanza" id="stanza_dx_4">
+                <polygon class="cls-2" points="324,-4 524,-4 524,-100 324,-100"/>
+                <text x="424" y="-50" class="label-stanza">esposizione Moncada</text>
+            </g>
+             <!-- UP STANZA DX 3 -->
+            <g class="stanza" id="stanza_dx_3">
+                <polygon class="cls-2" points="324,0 524,0 524,100 324,100"/>
+                <text x="424" y="50" class="label-stanza">Esposizione Moncada</text>
+            </g>
+            <!-- CORRIDOIO NORD -->
+            <g class="stanza" id="corridoio_nord">
+                <polygon class="cls-2" points="220,-300 320,-300 320,100 220,100"/>
+                <text x="270" y="-100" class="label-stanza">Corridoio</text>
+            </g>
+            <!-- STANZA MATTONELLE SX -->
+            <g class="stanza" id="stanza_mattonelle_sx">
+                <polygon class="cls-2" points="0,104 216,104 216,140 100,140 100,240 0,240"/>
+                <text x="50" y="160" class="label-stanza">stanza</text>
+                <text x="50" y="175" class="label-stanza">mattonelle</text>
+            </g>
+
+            <!-- GHIGLIOTTINA -->
+            <g class="stanza" id="ghigliottina">
+                <polygon class="cls-2" points="104,144 216,144 216,240 104,240"/>
+                <text x="160" y="190" class="label-stanza">ghigliottina</text>
+            </g>
+
+            <!-- LAPIDARIUM SX -->
+            <g class="stanza" id="lapidarium">
+                <polygon class="cls-2" points="0,244 216,244 216,440 0,440"/>
+                <text x="108" y="340" class="label-stanza">lapidarium</text>
+            </g>
+
+            <!-- CORRIDOIO CENTRALE -->
+            <g class="stanza gruppo-galleria" id="corridoio_galleria">
+                <polygon class="cls-2" points="220,104 320,104 320,440 220,440"/>
+                <text x="270" y="270" class="label-stanza">Galleria</text>
+            </g>
+
+            <!-- STANZA 2 DX -->
+            <g class="stanza" id="stanza_2_dx">
+                <polygon class="cls-2" points="324,104 524,104 524,210 324,210"/>
+                <text x="424" y="157" class="label-stanza">la storia di Caltanissetta</text>
+            </g>
+
+            <!-- STANZA 1 DX -->
+            <g class="stanza gruppo-galleria" id="stanza_1_dx">
+                <polygon class="cls-2" points="324,214 524,214 524,330 324,330"/>
+                <text x="424" y="270" class="label-stanza">galleria - continuazione</text>           
+            </g>
+
+            <!-- BOOKSHOP -->
+            <g class="stanza" id="bookshop">
+                <polygon class="cls-2" points="324,334 524,334 524,440 324,440"/>
+                <text x="424" y="387" class="label-stanza">Bookshop</text>
+            </g>
+
+            <!-- INGRESSO -->
+            <g class="stanza" id="ingresso">
+                <polygon class="cls-2" points="220,444 320,444 320,520 220,520"/>
+                <text x="270" y="482" class="label-stanza">ingresso</text>
+            </g>
+        </svg>
+    </div>
+
+    <div id="info-pannello">
+        <div class="lang-switcher">
+            <button onclick="setLanguage('it')" id="btn-it" class="lang-btn active">IT</button>
+            <button onclick="setLanguage('en')" id="btn-en" class="lang-btn">EN</button>
+        </div>
+        <h2 id="titolo-stanza">Seleziona una stanza</h2>
+        <p id="info-stanza">Clicca sulla mappa per ascoltare la descrizione.</p>
+        <div id="player-wrapper"></div>
+        
+    </div>
+</div>
+
+<script>
+const content = {
+    it: {
+        titoloDefault: "Seleziona una stanza",
+        infoDefault: "Clicca sulla mappa per ascoltare la descrizione.",
+        audioPlaying: "▶ Riproduzione audio...",
+        audioError: "Audio non disponibile per questa lingua.",
+        stanze: {
+            "guadagnolo_1": ".",
+            "guadagnolo_2": ".",
+            "stanza_dx_4": ".",
+            "stanza_dx_3": ".",
+            "stanza_mattonelle_sx": ".",
+            "lapidarium": ".",
+            "ghigliottina": ".",
+            "corridoio_nord": ".",
+            "corridoio_centrale": ".",
+            "stanza_2_dx": ".",
+            "stanza_1_dx": ".",
+            "bookshop": ".",
+            "ingresso": "."
+        }
+    },
+    en: {
+        titoloDefault: "Select a room",
+        infoDefault: "Click on the map to listen to the description.",
+        audioPlaying: "▶ Playing audio...",
+        audioError: "Audio not available for this language.",
+        stanze: {
+            "guadagnolo_1": ".",
+            "guadagnolo_2": ".",
+            "stanza_dx_4": ".",
+            "stanza_dx_3": ".",
+            "stanza_mattonelle_sx": ".",
+            "lapidarium": ".",
+            "ghigliottina": ".",
+            "corridoio_nord": ".",
+            "corridoio_centrale": ".",
+            "stanza_2_dx": ".",
+            "stanza_1_dx": ".",
+            "bookshop": ".",
+            "ingresso": "."
+        }
+    }
+};
+
+/**
+ * STATO DELL'APPLICAZIONE
+ */
+let currentLang = 'it';
+let lastSelectedId = null;
+
+/**
+ * INIZIALIZZAZIONE AL CARICAMENTO DEL DOM
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById('mainContainer');
+    
+    container.addEventListener('click', (e) => {
+        const stanzaGroup = e.target.closest('.stanza');
+        if (!stanzaGroup) return;
+
+        // Rimuovi la classe attiva da TUTTE le stanze
+        document.querySelectorAll('.stanza').forEach(s => s.classList.remove('stanza-attiva'));
+
+        // SE la stanza cliccata fa parte della galleria
+        if (stanzaGroup.classList.contains('gruppo-galleria')) {
+            // Illumina TUTTE le stanze del gruppo galleria
+            document.querySelectorAll('.gruppo-galleria').forEach(s => s.classList.add('stanza-attiva'));
+            
+            // Imposta un ID unico per l'audio (es. quello della galleria principale)
+            lastSelectedId = "corridoio_centrale"; 
+        } else {
+            // Comportamento normale per le altre stanze
+            stanzaGroup.classList.add('stanza-attiva');
+            lastSelectedId = stanzaGroup.id;
+        }
+
+        updateUI(lastSelectedId);
+    });
+});
+
+/**
+ * FUNZIONE PER CAMBIARE LINGUA
+ * Richiamata dai pulsanti IT/EN nell'HTML
+ */
+function setLanguage(lang) {
+    if (currentLang === lang) return; // Evita ricaricamenti inutili
+    
+    currentLang = lang;
+    
+    // Aggiorna lo stato visivo dei pulsanti lingua
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `btn-${lang}`);
+    });
+
+    // Se c'è una stanza selezionata, aggiorna i testi al volo, altrimenti resetta ai default
+    if (lastSelectedId) {
+        updateUI(lastSelectedId);
+    } else {
+        document.getElementById('titolo-stanza').innerText = content[currentLang].titoloDefault;
+        document.getElementById('info-stanza').innerText = content[currentLang].infoDefault;
+    }
+}
+
+/**
+ * AGGIORNAMENTO DELL'INTERFACCIA (Testi e Audio)
+ */
+function updateUI(id) {
+    const titoloUI = document.getElementById('titolo-stanza');
+    const infoUI = document.getElementById('info-stanza');
+    const wrapper = document.getElementById('player-wrapper');
+
+    // 1. Formattazione Titolo (es: "guadagnolo_1" -> "Guadagnolo 1")
+    const formattedTitle = id.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    titoloUI.innerText = formattedTitle;
+
+    // 2. Recupero Descrizione
+    const descrizione = content[currentLang].stanze[id] || "Descrizione non disponibile / Description not available.";
+    infoUI.innerText = descrizione;
+
+    // 3. Gestione Audio
+    const audioSource = `audio/${currentLang}/${id}.mp3`;
+    
+    wrapper.innerHTML = `
+        <div class="player-container">
+            <p style="font-size: 0.8em; margin-bottom: 8px; color: #ddd;">
+                ${content[currentLang].audioPlaying}
+            </p>
+            <audio controls autoplay style="width: 100%;" ontimeupdate="handleAudioProgress(this)" onerror="handleAudioError()">
+                <source src="${audioSource}" type="audio/mpeg">
+                Il tuo browser non supporta l'elemento audio.
+            </audio>
+        </div>
+    `;
+}
+
+/**
+ * GESTIONE ERRORI AUDIO
+ */
+function handleAudioError() {
+    const wrapper = document.getElementById('player-wrapper');
+    wrapper.innerHTML = `<p style="color: #ffb347; font-size: 0.9em;">${content[currentLang].audioError}</p>`;
+}
+</script>
+</body>
+</html>
