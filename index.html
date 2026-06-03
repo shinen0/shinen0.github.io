@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapidarium di Palazzo Moncada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Megrim&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="header-meta">
+                <span class="version-tag">v0.4 BETA</span>
+                <div class="lang-switcher">
+                    <button onclick="setLanguage('it')" id="btn-it" class="lang-btn active">IT</button>
+                    <button onclick="setLanguage('en')" id="btn-en" class="lang-btn">EN</button>
+                </div>
+            </div>
+            <h1 class="site-title">Lapidarium di Palazzo Moncada</h1>
+            <p class="site-subtitle">Caltanissetta — Audioguida Interattiva</p>
+        </div>
+    </header>
+    <!-- NAVBAR -->
+    <nav class="site-nav" id="site-nav" aria-label="Navigazione">
+        <span class="nav-item nav-home" onclick="goHome()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span data-i18n="home">Planimetria</span>
+        </span>
+        <span class="nav-sep" id="nav-sep" style="display:none">›</span>
+        <!-- "›" che spunta quando una stanza è stata selezionata, quindi "PLANIMETRIA > STANZA X" -->
+        <span class="nav-item nav-room" id="nav-room" style="display:none"></span>
+        <!-- Nome della stanza selezionata -->
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content"> <!-- VIEW 1: PLANIMETRIA -->
+        <section class="view" id="view-map" aria-label="Mappa del museo">
+            <div class="map-wrapper">
+                <svg class="planimetria" viewBox="0 -300 530 850" preserveAspectRatio="xMidYMid meet" role="img"
+                    aria-label="Planimetria interattiva del museo">
+                    <title>Planimetria Lapidarium</title>
+
+                    <!-- GUADAGNOLO 2 -->
+                    <g class="room" id="r-guadagnolo_2" onclick="enterRoom('guadagnolo_1')" role="button" tabindex="0" 
+                        aria-label="Sala Guadagnolo 2"> <!-- Nota: per ora entrambe le stanze Guadagnolo portano alla stessa vista -->
+                        <polygon class="room-shape" points="324,-204 524,-204 524,-300 324,-300" />
+                        <text x="424" y="-248" class="room-label">Guadagnolo</text>
+                        <text x="424" y="-233" class="room-number">II</text>
+                    </g>
+
+                    <!-- GUADAGNOLO 1 -->
+                    <g class="room" id="r-guadagnolo_1" onclick="enterRoom('guadagnolo_1')" role="button" tabindex="0"
+                        aria-label="Sala Guadagnolo 1">
+                        <polygon class="room-shape" points="324,-104 524,-104 524,-200 324,-200" />
+                        <text x="424" y="-153" class="room-label">Guadagnolo</text>
+                        <text x="424" y="-138" class="room-number">I</text>
+                    </g>
+
+                    <!-- STANZA DX 4 -->
+                    <g class="room" id="r-stanza_dx_4" onclick="enterRoom('stanza_dx_3')" role="button" tabindex="0"
+                        aria-label="Esposizione Moncada 2"> <!-- Nota: per ora entrambe le stanze Moncada portano alla stessa vista -->
+                        <polygon class="room-shape" points="324,-4 524,-4 524,-100 324,-100" />
+                        <text x="424" y="-53" class="room-label">Esposizione</text>
+                        <text x="424" y="-38" class="room-number">Moncada II</text>
+                    </g>
+
+                    <!-- STANZA DX 3 -->
+                    <g class="room" id="r-stanza_dx_3" onclick="enterRoom('stanza_dx_3')" role="button" tabindex="0"
+                        aria-label="Esposizione Moncada 1">
+                        <polygon class="room-shape" points="324,0 524,0 524,100 324,100" />
+                        <text x="424" y="45" class="room-label">Esposizione</text>
+                        <text x="424" y="60" class="room-number">Moncada I</text>
+                    </g>
+
+                    <!-- CORRIDOIO NORD -->
+                    <g class="room room-corridor" id="r-corridoio_nord" onclick="enterRoom('null')"
+                        role="button" tabindex="0" aria-label="Corridoio Nord"> <!-- Nota: corridoio non visitabile, quindi enterRoom con 'null' per ora -->
+                        <polygon class="room-shape" points="220,-300 320,-300 320,100 220,100" />
+                        <text x="270" y="-100" class="room-label" transform="rotate(-90,270,-100)">Corridoio Nord</text>
+                    </g>
+
+                    <!-- STANZA MATTONELLE SX -->
+                    <g class="room" id="r-stanza_mattonelle_sx" onclick="enterRoom('stanza_mattonelle_sx')"
+                        role="button" tabindex="0" aria-label="Stanza Mattonelle">
+                        <polygon class="room-shape" points="0,104 216,104 216,140 100,140 100,240 0,240" />
+                        <text x="70" y="165" class="room-label">Stanza</text>
+                        <text x="70" y="180" class="room-number">Mattonelle</text>
+                    </g>
+
+                    <!-- GHIGLIOTTINA -->
+                    <g class="room" id="r-ghigliottina" onclick="enterRoom('ghigliottina')" role="button" tabindex="0"
+                        aria-label="Ghigliottina">
+                        <polygon class="room-shape" points="104,144 216,144 216,240 104,240" />
+                        <text x="160" y="193" class="room-label">Ghigliottina</text>
+                    </g>
+
+                    <!-- LAPIDARIUM -->
+                    <g class="room" id="r-lapidarium" onclick="enterRoom('lapidarium')" role="button" tabindex="0"
+                        aria-label="Lapidarium">
+                        <polygon class="room-shape" points="0,244 216,244 216,440 0,440" />
+                        <text x="108" y="338" class="room-label">Lapidarium</text>
+                    </g>
+
+                    <!-- GALLERIA (gruppo) -->
+                    <g class="room room-gallery" id="r-corridoio_galleria" onclick="enterRoom('galleria')" role="button"
+                        tabindex="0" aria-label="Galleria">
+                        <polygon class="room-shape" points="220,104 320,104 320,440 220,440" />
+                        <text x="270" y="270" class="room-label" transform="rotate(-90,270,270)">Galleria</text>
+                    </g>
+
+                    <!-- STORIA DI CALTANISSETTA -->
+                    <g class="room room-gallery" id="r-stanza_2_dx" onclick="enterRoom('galleria')" role="button"
+                        tabindex="0" aria-label="La storia di Caltanissetta">
+                        <polygon class="room-shape" points="324,104 524,104 524,210 324,210" />
+                        <text x="424" y="152" class="room-label">La storia di</text>
+                        <text x="424" y="167" class="room-number">Caltanissetta</text>
+                    </g>
+
+                    <!-- GALLERIA CONTINUAZIONE -->
+                    <g class="room room-gallery" id="r-stanza_1_dx" onclick="enterRoom('galleria')" role="button"
+                        tabindex="0" aria-label="Galleria - Continuazione">
+                        <polygon class="room-shape" points="324,214 524,214 524,330 324,330" />
+                        <text x="424" y="275" class="room-label">Galleria</text>
+                        <text x="424" y="290" class="room-number">continuazione</text>
+                    </g>
+
+                    <!-- BOOKSHOP -->
+                    <g class="room" id="r-bookshop" onclick="enterRoom('bookshop')" role="button" tabindex="0"
+                        aria-label="Bookshop">
+                        <polygon class="room-shape" points="324,334 524,334 524,440 324,440" />
+                        <text x="424" y="390" class="room-label">Bookshop</text>
+                    </g>
+
+                    <!-- INGRESSO -->
+                    <g class="room" id="r-ingresso" onclick="enterRoom('ingresso')" role="button" tabindex="0"
+                        aria-label="Ingresso">
+                        <polygon class="room-shape" points="220,444 320,444 320,540 220,540" />
+                        <text x="270" y="495" class="room-label">Ingresso</text>
+                    </g>
+
+                </svg>
+
+                <p class="map-hint" data-i18n="mapHint">Clicca su una stanza per entrare e ascoltare l'audioguida</p>
+            </div>
+        </section>
+
+        <!-- VIEW 2: STANZA -->
+        <section class="view hidden" id="view-room" aria-label="Vista stanza">
+            <div class="room-view">
+
+                <!-- Intestazione stanza -->
+                <div class="room-header">
+                    <button class="back-btn" onclick="goHome()" aria-label="Torna alla mappa">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                        <span data-i18n="back">Mappa</span>
+                    </button>
+                    <div class="room-title-block">
+                        <p class="room-category" id="room-category"></p>
+                        <h2 class="room-title" id="room-title-h2"></h2>
+                    </div>
+                </div>
+                <!-- Descrizione principale -->
+                <div class="room-description">
+                    <p id="room-desc-text"></p>
+                </div>
+
+                <!-- PLAYER PRINCIPALE (audioguida della stanza) -->
+                <div class="main-audio-block" id="main-audio-block">
+                    <div class="audio-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+                        </svg>
+                        <span data-i18n="mainAudio">Audioguida principale</span>
+                    </div>
+                    <audio id="main-audio-player" controls style="width:100%">
+                        <source id="main-audio-src" src="" type="audio/mpeg">
+                    </audio>
+                </div>
+
+                <!-- HOTSPOT LISTA -->
+                <div class="hotspot-section" id="hotspot-section">
+                    <h3 class="hotspot-title" data-i18n="inRoom">In questa sala</h3>
+                    <div class="hotspot-grid" id="hotspot-grid">
+                        <!-- Hotspot generati via JS -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PANNELLO AUDIO HOTSPOT (slide-in) -->
+            <div class="hotspot-panel" id="hotspot-panel" aria-hidden="true">
+                <div class="hp-header">
+                    <div>
+                        <p class="hp-category" id="hp-category"></p>
+                        <h3 class="hp-title" id="hp-title"></h3>
+                    </div>
+                    <button class="hp-close" onclick="closeHotspot()" aria-label="Chiudi">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <p class="hp-desc" id="hp-desc"></p>
+                <div class="hp-audio-wrap">
+                    <audio id="hp-audio-player" controls style="width:100%">
+                        <source id="hp-audio-src" src="" type="audio/mpeg">
+                    </audio>
+                </div>
+                <p class="audio-unavail hidden" id="hp-audio-error" data-i18n="audioError">Audio non disponibile per questa lingua.</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+<footer class="site-footer">
+  <p class="footer-copy">
+    <span data-i18n="footerText">Sito web sviluppato dai volontari del</span>
+    <span class="footer-trigger" id="sc-trigger">
+      <span data-i18n="footerTrigger">Servizio Civile</span>
+      <span class="footer-bubble" id="sc-bubble">
+        <span class="bubble-label" data-i18n="bubbleLabel"></span>
+        <span class="bubble-names">Angela, Alberto, Marta, Martina, Federica</span>
+      </span>
+    </span>
+    <span data-i18n="footerSection">— sezione Cultura</span>
+  </p>
+</footer>
+
+</html>
